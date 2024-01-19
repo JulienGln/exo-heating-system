@@ -14,31 +14,24 @@ public class HeatingManagerImpl {
 		double dTemperature = new Double(temperature);
 		double dThreshold = new Double(threshold);
 		if (dTemperature < dThreshold && active) {
-			try {
-				Socket socket = new Socket(HOST, PORT);
-				OutputStream os = socket.getOutputStream();
-				os.write("on".getBytes());
-				os.flush();
-				os.close();
-				socket.close();
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			writeToOutputStream("on");
 		} else if (dTemperature > dThreshold && active) {
-			try {
-				Socket socket = new Socket(HOST, PORT);
-				OutputStream os = socket.getOutputStream();
-				os.write("off".getBytes());
-				os.flush();
-				os.close();
-				socket.close();
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			writeToOutputStream("off");
+		}
+	}
+
+	public void writeToOutputStream(String message) {
+		try {
+			Socket socket = new Socket(HOST, PORT);
+			OutputStream os = socket.getOutputStream();
+			os.write(message.getBytes());
+			os.flush();
+			os.close();
+			socket.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
