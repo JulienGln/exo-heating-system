@@ -6,13 +6,16 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class HeatingManagerImpl {
-	
-	public void manageHeating(String t, String threshold, boolean active) {
-		double dT = new Double(t);
+
+	private final static int PORT = 9999;
+	private final static String HOST = "heater.home";
+
+	public void manageHeating(String temperature, String threshold, boolean active) {
+		double dTemperature = new Double(temperature);
 		double dThreshold = new Double(threshold);
-		if (dT < dThreshold && active) {
+		if (dTemperature < dThreshold && active) {
 			try {
-				Socket socket = new Socket("heater.home", 9999);
+				Socket socket = new Socket(HOST, PORT);
 				OutputStream os = socket.getOutputStream();
 				os.write("on".getBytes());
 				os.flush();
@@ -23,9 +26,9 @@ public class HeatingManagerImpl {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} else if (dT > dThreshold && active) {
+		} else if (dTemperature > dThreshold && active) {
 			try {
-				Socket socket = new Socket("heater.home", 9999);
+				Socket socket = new Socket(HOST, PORT);
 				OutputStream os = socket.getOutputStream();
 				os.write("off".getBytes());
 				os.flush();
