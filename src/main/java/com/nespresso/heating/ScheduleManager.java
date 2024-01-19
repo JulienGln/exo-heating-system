@@ -18,24 +18,21 @@ import java.util.Calendar;
 public class ScheduleManager {
 	
 	public static void manage(HeatingManagerImpl hM, String threshold) throws Exception {
-		String t = stringFromURL("http://probe.home:9990/temp", 4);
-		if(Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > startHour() && Calendar.getInstance().get(Calendar.HOUR_OF_DAY) < endHour()) {
-			hM.manageHeating(t, threshold, true);
-		} 
-		if(Calendar.getInstance().get(Calendar.HOUR_OF_DAY) < startHour() || Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > endHour()) {
-			hM.manageHeating(t, threshold, false);
-		}
+		String temperature = stringFromURL("http://probe.home:9990/temp", 4);
+		int hour_of_day = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+		boolean activate = hour_of_day > startHour() && hour_of_day < endHour();
+        hM.manageHeating(temperature, threshold, activate);
 	}
 
 	private static int endHour() throws NumberFormatException, MalformedURLException, IOException {
-		return new Integer(stringFromURL("http://timer.home:9990/end", 2));
+		return Integer.parseInt(stringFromURL("http://timer.home:9990/end", 2));
 	}
 
-	private static String stringFromURL(String urlString, int s) throws MalformedURLException,
+	private static String stringFromURL(String urlString, int sizeOfString) throws MalformedURLException,
 			IOException {
 		URL url = new URL(urlString);
 		InputStream is = url.openStream();
-		byte[] tempBuffer = new byte[s];
+		byte[] tempBuffer = new byte[sizeOfString];
 		is.read(tempBuffer);
 		String t = new String(tempBuffer);
 		is.close();
@@ -43,7 +40,7 @@ public class ScheduleManager {
 	}
 
 	private static int startHour() throws NumberFormatException, MalformedURLException, IOException {
-		return new Integer(stringFromURL("http://timer.home:9990/start", 2));
+		return Integer.parseInt(stringFromURL("http://timer.home:9990/start", 2));
 	}
 
 }
