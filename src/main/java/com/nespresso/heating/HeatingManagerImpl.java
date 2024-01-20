@@ -11,8 +11,8 @@ public class HeatingManagerImpl {
 	private final static String HOST = "heater.home";
 
 	public void manageHeating(String temperature, String threshold, boolean active) {
-		double dTemperature = new Double(temperature);
-		double dThreshold = new Double(threshold);
+		double dTemperature = Double.parseDouble(temperature);
+		double dThreshold = Double.parseDouble(threshold);
 		if (dTemperature < dThreshold && active) {
 			writeToOutputStream("on");
 		} else if (dTemperature > dThreshold && active) {
